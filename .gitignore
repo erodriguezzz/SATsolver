@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,jetbrains+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,jetbrains+all
 
+### Bash history && VScode### 
+.bash_history
+
 ### C ###
 # Prerequisites
 *.d
