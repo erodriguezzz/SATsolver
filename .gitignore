@@ -3,6 +3,7 @@
 
 ### Bash history && VScode### 
 .bash_history
+.bashrc
 
 ### C ###
 # Prerequisites
@@ -103,6 +104,7 @@ dkms.conf
 
 # CMake
 cmake-build-*/
+CMakeLists.txt
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
