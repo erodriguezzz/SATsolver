@@ -1,8 +1,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/c,jetbrains+all
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,jetbrains+all
 
-### Bash history && VScode### 
+### Bash history && VScode ### 
 .bash_history
+.bashrc
+
+### Conjuctive Normal Form ("SAT files") ### 
+*.cnf
 
 ### C ###
 # Prerequisites
@@ -42,6 +46,9 @@
 *.i*86
 *.x86_64
 *.hex
+p_slave
+p_view
+p_master
 
 # Debug files
 *.dSYM/
@@ -103,6 +110,7 @@ dkms.conf
 
 # CMake
 cmake-build-*/
+CMakeLists.txt
 
 # Mongo Explorer plugin
 .idea/**/mongoSettings.xml
