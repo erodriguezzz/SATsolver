@@ -20,7 +20,7 @@ int main(int argc, const char *argv[]) {
         sprintf(cmd, "minisat %s |  grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\"", argv[argc]);
         FILE *stream = popen(cmd, "r");
         while (fgets(cmd, MAX_LENGTH, stream) != NULL) {
-            puts(cmd);
+            fputs(cmd, stdout);
         }
         pclose(stream);
     }
