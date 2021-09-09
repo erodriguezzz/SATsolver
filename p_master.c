@@ -1,6 +1,11 @@
+#define _DEFAULT_SOURCE 
+
+
 #include <stdio.h>
 #include <sys/shm.h>
 #include <sys/ipc.h>
+#include <stdlib.h>
+
 #define SHM_KEY 1234
 #define FILES_PER_SLAVE 2
 
