@@ -2,31 +2,27 @@
 
 #include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <sys/types.h>
 #include <string.h>
 
 #define MAX_LENGTH 1024
 #define MAX_PATH_LENGTH 256
-#define READ 0
-#define WRITE 1
+#define CLEAN_BUFF while(getchar() != '\n');
 
-int main(int argc, const char *argv[]) {
-    char buff[MAX_LENGTH], output[MAX_LENGTH];
-    pid_t pid = getpid();
+int main() {
+    char buff[MAX_LENGTH], output[MAX_LENGTH], path[MAX_PATH_LENGTH];
+    while(scanf("%s", path) != EOF) {
+        CLEAN_BUFF
+        sprintf(output, "%d\n", getpid());
+        snprintf(buff, MAX_PATH_LENGTH,
+                "minisat %s | grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\"", path);
+        FILE *stream = popen(buff, "r");
 
-    while(fgets(buff, MAX_LENGTH, stdin) != NULL) {
-        sprintf(output, "minisat %s | grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\"", buff);
-        FILE *stream = popen(output, "r");
-        puts("Hola");
-        sprintf(output, "%d\n", pid);
         while (fgets(buff, MAX_LENGTH, stream) != NULL) {
             strcat(output, buff);
         }
-        
+
         pclose(stream);
-        printf(output);
+        fputs(output, stdout);
     }
 
     return 0;
