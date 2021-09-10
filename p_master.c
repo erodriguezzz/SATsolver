@@ -14,8 +14,12 @@ int main(int argc, char const *argv[]){
         fprintf(stderr, "No files inputted. \n");
         exit(1);
     }
-    int slaves = ((argc - 1) / FILES_PER_SLAVE);
-    while(slaves != 0){
+
+    int read_end_slaves[] = {};
+
+    int slaves = (argc - (argc % 2 ? 0 : 1)) / FILES_PER_SLAVE;
+
+    while(slaves != 0) {
         
     }
     
