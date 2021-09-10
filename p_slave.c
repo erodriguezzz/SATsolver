@@ -13,7 +13,7 @@ int main() {
     while(scanf("%s", path) != EOF) {
         CLEAN_BUFF
         sprintf(output, "%d\n", getpid());
-        snprintf(buff, MAX_PATH_LENGTH,
+        snprintf(buff, MAX_LENGTH,
                 "minisat %s | grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\"", path);
         FILE *stream = popen(buff, "r");
 
