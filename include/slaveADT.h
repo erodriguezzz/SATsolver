@@ -33,7 +33,9 @@ int rmSlave(slavesADT slaves, int slave_id);
 /**
  * Indicates which slaves are ready for read.
  * @param[out] available_ids
- * @return Returns the amount of slaves that can be read.
+ * @return Returns the dimension of array available_ids[].
+ * Upon error, returns -1.
+ *
  */
 size_t available(slavesADT slaves, int available_ids[]);
 

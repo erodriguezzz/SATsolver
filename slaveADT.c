@@ -20,6 +20,7 @@ slavesADT newSlaves(){
     if(new == NULL)
         return NULL;
     new->slaves = NULL;
+    new->amount = 0;
     new->largest = 0;
     new->active_set = malloc(sizeof(fd_set));
     if(new->active_set == NULL)
