@@ -1,4 +1,4 @@
-#include "include/pipesADT.h"
+#include "include/slaveADT.h"
 #include <stdlib.h>
 #include <sys/select.h>
 
