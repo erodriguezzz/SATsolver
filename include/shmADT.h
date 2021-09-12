@@ -2,38 +2,71 @@
  * @file: svshmADT.h
  * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  *
- * This TAD implements the System V IPC API and POSIX IPC API
- * for communicating between processes via share memory. Each instance
- * of shmADT has a MAX_LENGTH buffer to write to.
+ * This TAD implements the System V IPC API or POSIX IPC API, depending
+ * with which ??shmADT.c you compile, for communicating between processes
+ * via share memory. Each instance of shmADT has a MAX_LENGTH buffer to write to.
+ *
+ * In case of an error errno will be set according to the IPC API.
  */
 
-#ifndef MV_SHM_ADT_H
-#define MV_SHM_ADT_H
+#ifndef SHM_ADT_H
+#define SHM_ADT_H
 
 #include <fcntl.h>
 #include <sys/types.h>
 #include <stdbool.h>
 
-#define MAX_LENGTH 1024 // TODO: Check how we can adapt this to suit the amount of files.
-
-#define SEM_NAME "shm sem" // TODO: See how we can comunicate this.
+#define MAX_LENGTH 1024 // TODO: This can be later modified to suit a circular buffer.
 #define MAX_NAME_LENGTH 20
-
-/**
- * In case of an System V API error, errno will be set to
- *
- * */
-#define ESHMGET 0x123
-#define ESHMAT 0x124
 
 typedef struct shmCDT * shmADT;
 
+/**
+ * Creates and opens a new, or opens an existing, shared memory object and
+ * semaphore to interact with the shm. Configured only for one reader and one writer.
+ *
+ * @param[in] shm_name The share memory name.
+ * @param[in] sem_name The semaphore name.
+ * @param[in] flags The API flags for creation and permissions
+ * @param[in] mode The permissions.
+ *
+ * @return The share memory reference ADT or NULL in case of an error.
+ * */
 shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode);
 
-ssize_t readShm(shmADT shm, char * buf, size_t count);
+/**
+ * Reads from the share memory count bytes or until '\0' is found,
+ * which ever happens first. These are left in buf.
+ *
+ * @param[in] share The share memory reference ADT.
+ * @param[out] buf The buffer in which the response is left.
+ * @param[in] count The amount to be read.
+ *
+ * @return The amount read or -1 in case of an error.
+ * */
+ssize_t readShm(shmADT share, char * buf, size_t count);
 
+/**
+ * Writes from the buf count bytes or until '\0' is found,
+ * which ever happens first to the Share Memory.
+ *
+ * @param[in] share The share memory reference ADT.
+ * @param[in] buf The buffer to be read.
+ * @param[in] count The amount to be written.
+ *
+ * @return The amount written or -1 in case of an error.
+ * */
 ssize_t writeShm(shmADT shm, const char * buf, size_t count);
 
-int closeShm(shmADT shm, bool creator);
+/**
+ * Closes the share memory reference, when all references are closed
+ * it destroys it.
+ *
+ * @param[in] share The share memory reference ADT.
+ * @param[in] creator If the user runing the comand created the share mem.
+ *
+ * @return 0 if all goes well or -1 in case of an error.
+ * */
+int closeShm(shmADT share, bool creator);
 
-#endif // MV_SHM_ADT_H
+#endif // SHM_ADT_H
