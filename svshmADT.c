@@ -1,5 +1,5 @@
 /**
- * @file: shmADT.c
+ * @file: svshmADT.c
  * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  */
 
@@ -13,6 +13,7 @@
 #include <semaphore.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <unistd.h>
 
 typedef struct t_shm * Pt_shm;
 
@@ -68,16 +69,20 @@ ssize_t readShm(shmADT shm, char * buf, size_t count) {
     }
     
     ssize_t i = 0;
-    while (shm->shm->r_pointer < shm->shm->w_pointer && i < count) { 
+    while (shm->shm->r_pointer < shm->shm->w_pointer && i < count && shm->shm->buf[shm->shm->r_pointer] != '\0') { 
         buf[i++] = shm->shm->buf[shm->shm->r_pointer++];
     }
 
-    if (i != count) {
-        buf[i]='\0';
+
+    if (shm->shm->w_pointer == 0) { // TODO: Check this.
+        shm->shm->r_pointer = 0;
+    } else if (shm->shm->buf[shm->shm->r_pointer] == '\0') {
+        shm->shm->r_pointer++;
     }
 
-    if (shm->shm->r_pointer == shm->shm->w_pointer)
-        shm->shm->r_pointer = shm->shm->w_pointer = 0;
+    // if (i != count) {
+    //     buf[i]='\0';
+    // }
 
     return i;
 }
@@ -91,8 +96,9 @@ ssize_t writeShm(shmADT shm, const char * buf, size_t count) {
     if (shm->shm->w_pointer < MAX_LENGTH)
         shm->shm->buf[shm->shm->w_pointer++] = '\0';
 
-    if (shm->shm->w_pointer == MAX_LENGTH) {
-        shm->shm->r_pointer = shm->shm->w_pointer = 0;
+    if (shm->shm->w_pointer == MAX_LENGTH) {  // TODO: This can be avoided with a set buffer length of 2^N 
+                                              // and a circular buffer with 2^N sized w & r pointers.
+        shm->shm->w_pointer = 0;
         errno = ENOMEM;
         return -1;
     }
@@ -107,15 +113,17 @@ ssize_t writeShm(shmADT shm, const char * buf, size_t count) {
 int closeShm(shmADT shm, bool creator) {
     if(shmdt(shm->shm) == -1)
         return -1;
-    if(sem_close(shm->sem) == -1)
-        return -1;
     
     if (creator) {
+        sleep(10);
         if(sem_unlink(SEM_NAME) == -1)
             return -1;
         if (shmctl(shm->shm_id, IPC_RMID, 0) == -1)
             return -1; 
     }
+
+    if(sem_close(shm->sem) == -1)
+        return -1;
 
     free(shm);
 }
