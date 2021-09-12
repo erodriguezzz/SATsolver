@@ -1,18 +1,38 @@
-#ifndef MV_SHM_LIB_H
-#define MV_SHM_LIB_H
+/**
+ * @file: shmADT.h
+ * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
+ *
+ * This TAD implements the System V IPC API and POSIX IPC API
+ * for communicating between processes via share memory. Each instance
+ * of shmADT has a MAX_LENGTH buffer to write to.
+ */
 
-#include <limits.h>
+#ifndef MV_SHM_ADT_H
+#define MV_SHM_ADT_H
 
-#define BUF_SIZE PIPE_BUF
-#define SHM_KEY 0x1234
+#include <fcntl.h>
+#include <sys/types.h>
+#include <stdbool.h>
 
-#define O_RDONLY         00
-#define O_WRONLY         01
-#define O_RDWR           02
+#define MAX_LENGTH 1024 // TODO: Check how we can adapt this to suit the amount of files.
+
+#define SEM_NAME "shm sem" // TODO: See how we can comunicate this.
+
+/**
+ * In case of an System V API error, errno will be set to
+ *
+ * */
+#define ESHMGET 0x123
+#define ESHMAT 0x124
 
 typedef struct shmCDT * shmADT;
 
-shmADT newShm()
+shmADT newShm(key_t key, int perms);
 
+ssize_t readShm(shmADT shm, char * buf, size_t count);
 
-#endif // MV_SHM_LIB_H
+ssize_t writeShm(shmADT shm, const char * buf, size_t count);
+
+int closeShm(shmADT shm, bool creator);
+
+#endif // MV_SHM_ADT_H
