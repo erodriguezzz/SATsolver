@@ -1,5 +1,5 @@
 /**
- * @file: shmADT.h
+ * @file: svshmADT.h
  * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  *
  * This TAD implements the System V IPC API and POSIX IPC API
