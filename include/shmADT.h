@@ -17,6 +17,7 @@
 #define MAX_LENGTH 1024 // TODO: Check how we can adapt this to suit the amount of files.
 
 #define SEM_NAME "shm sem" // TODO: See how we can comunicate this.
+#define MAX_NAME_LENGTH 20
 
 /**
  * In case of an System V API error, errno will be set to
@@ -27,7 +28,7 @@
 
 typedef struct shmCDT * shmADT;
 
-shmADT newShm(key_t key, int perms);
+shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode);
 
 ssize_t readShm(shmADT shm, char * buf, size_t count);
 

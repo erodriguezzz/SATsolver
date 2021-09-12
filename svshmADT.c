@@ -115,7 +115,6 @@ int closeShm(shmADT shm, bool creator) {
         return -1;
     
     if (creator) {
-        sleep(10);
         if(sem_unlink(SEM_NAME) == -1)
             return -1;
         if (shmctl(shm->shm_id, IPC_RMID, 0) == -1)
