@@ -46,7 +46,6 @@ int main(int argc, char const *argv[]){
     puts(n_files);
     if (writeShm(shm, n_files, read+1) == -1) {
         closeShm(shm, true);
-        puts("Cagaste pa");
         return 1;
     }
 
