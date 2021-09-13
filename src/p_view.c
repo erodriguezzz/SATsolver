@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <ctype.h>
+#include <stdlib.h>
+#include <unistd.h>
+#define MAX_NAME_LEN 20
 
 /**
  * Translates a number represented by a string to a integer
@@ -19,35 +22,42 @@ int strToNum(const char * str);
 int main(int argc, char const *argv[]) {
     int files = 0;
     char buffer[MAX_LENGTH];
-    shmADT shared  = newShm("somos unos kpo", "somos unos msckpo", O_RDWR, 0);
+    shmADT shared;
+    if (argc != 3) {
+        char * shm_name = NULL;
+        char * sem_name = NULL;
+        size_t len=0;
+
+        if (getline(&shm_name, &len, stdin) <= 0) return -1;
+
+        if (getline(&sem_name, &len, stdin) <= 0) return -1;
+
+        shared = newShm(shm_name, sem_name, O_RDWR, 0);
+        
+        free(shm_name); free(sem_name);
+    } else {
+        shared = newShm(argv[1], argv[2], O_RDWR, 0);
+    }
+
     if (shared == NULL)
         return -1;  // TODO: Better handle error exits.
     
-    if (argc == 2) {  // TODO: Discuss how we can handle (int) files
-        files = strToNum(argv[1]);
-    } else if (argc == 1) {
-        int qty = readShm(shared, buffer, MAX_LENGTH);
-        if(qty == 0)
-            return -1;
-        files = strToNum(buffer);
-    } else {
+    int qty = readShm(shared, buffer, MAX_LENGTH);
+    if(qty == -1)
         return -1;
-    }  
-        
+    printf("%d\n", qty);
+    printf("%s\n", buffer);
+    files = atoi(buffer);
+    printf("%d\n", files);
+
     while (files--) {
         if (readShm(shared, buffer, MAX_LENGTH) == -1) {
             return -1;
         }
-        puts(buffer); // TODO: Analyze how we write to stdout.
+        printf("%s", buffer); // TODO: Analyze how we write to stdout.
     }
 
     closeShm(shared, false);
+    printf("Hola\n");
     return 0;
-}
-
-int strToNum(const char * str) {
-    int result;
-    while (*str && isdigit(*str))
-        result = result * 10 + *(str++) - '0';
-    return result;
 }
