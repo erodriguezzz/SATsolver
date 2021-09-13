@@ -82,8 +82,7 @@ ssize_t readShm(shmADT shared, char * buf, size_t count) {
     
     ssize_t i = 0;
     while (shared->shm->r_pointer < shared->shm->w_pointer && i < count && shared->shm->buf[shared->shm->r_pointer] != '\0') {
-        char aux = shared->shm->buf[shared->shm->r_pointer++];
-        buf[i++] = aux;
+        buf[i++] = shared->shm->buf[shared->shm->r_pointer++];
     }
 
 
@@ -91,6 +90,10 @@ ssize_t readShm(shmADT shared, char * buf, size_t count) {
         shared->shm->r_pointer = 0;
     } else if (shared->shm->buf[shared->shm->r_pointer] == '\0') {
         shared->shm->r_pointer++;
+    }
+
+    if (i < count) {
+        buf[i] = '\0';
     }
 
     return i;

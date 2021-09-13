@@ -101,7 +101,6 @@ int main(int argc, char const *argv[]){
         }
     }
 
-    getc(stdin);
     free(buf);
     fclose(s2m_ptr);
     fclose(result);
