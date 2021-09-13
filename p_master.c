@@ -13,6 +13,7 @@
 #define SHM_KEY 1234
 #define FILES_PER_SLAVE 2
 
+// TODO: add more meaningful error handling.
 int main(int argc, char const *argv[]){
     if(argc == 1){
         fprintf(stderr, "No files inputted. \n");
@@ -59,8 +60,7 @@ int main(int argc, char const *argv[]){
         getline(&buf, &len, s2m_ptr);
         fprintf(result, "%s", buf);
         received++;
-        int id;
-        sscanf(buf, "%d", &id);
+        int id = atoi(buf);
         int fd = getWriteFD(slaves, id);
         if (sent < argc - 1) {
             dprintf(fd, "%s\n", argv[sent + 1]);
