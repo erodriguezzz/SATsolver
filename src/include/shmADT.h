@@ -31,7 +31,7 @@ typedef struct shmCDT * shmADT;
  * @param[in] mode The permissions.
  *
  * @return The share memory reference ADT or NULL in case of an error.
- * */
+ */
 shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode);
 
 /**
@@ -43,7 +43,7 @@ shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode)
  * @param[in] count The amount to be read.
  *
  * @return The amount read or -1 in case of an error.
- * */
+ */
 ssize_t readShm(shmADT share, char * buf, size_t count);
 
 /**
@@ -55,7 +55,7 @@ ssize_t readShm(shmADT share, char * buf, size_t count);
  * @param[in] count The amount to be written.
  *
  * @return The amount written or -1 in case of an error.
- * */
+ */
 ssize_t writeShm(shmADT shm, const char * buf, size_t count);
 
 /**
@@ -66,7 +66,7 @@ ssize_t writeShm(shmADT shm, const char * buf, size_t count);
  * @param[in] creator If the user running the command created the share mem.
  *
  * @return 0 if all goes well or -1 in case of an error.
- * */
+ */
 int closeShm(shmADT share, bool creator);
 
 #endif // SHM_ADT_H
