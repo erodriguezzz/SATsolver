@@ -1,12 +1,12 @@
 /**
- * @file: svshmADT.h
+ * @file: shmADT.h
  * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  *
- * This TAD implements the System V IPC API or POSIX IPC API, depending
+ * This ADT implements the System V IPC API or POSIX IPC API, depending
  * with which ??shmADT.c you compile, for communicating between processes
  * via share memory. Each instance of shmADT has a MAX_LENGTH buffer to write to.
  *
- * In case of an error errno will be set according to the IPC API.
+ * Upon error errno is set appropriately.
  */
 
 #ifndef SHM_ADT_H
@@ -25,8 +25,8 @@ typedef struct shmCDT * shmADT;
  * Creates and opens a new, or opens an existing, shared memory object and
  * semaphore to interact with the shm. Configured only for one reader and one writer.
  *
- * @param[in] shm_name The share memory name.
- * @param[in] sem_name The semaphore name.
+ * @param[in] shm_name The share memory name at least 8 bytes long.
+ * @param[in] sem_name The semaphore name at least 8 bytes long.
  * @param[in] flags The API flags for creation and permissions
  * @param[in] mode The permissions.
  *
