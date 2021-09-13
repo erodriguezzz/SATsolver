@@ -4,12 +4,10 @@
 ### Bash history && VScode ### 
 .bash_history
 .bashrc
-.vscode/*
 
 ### Conjuctive Normal Form ("SAT files") ### 
 *.cnf
 
-tlpi-dist/*
 
 ### C ###
 # Prerequisites

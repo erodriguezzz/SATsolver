@@ -9,12 +9,10 @@
 
 #define R 0
 #define W 1
-#define SHM_KEY 1234#define FILES_PER_SLAVE 2
+#define SHM_KEY 1234
+#define FILES_PER_SLAVE 2
 
 int main(int argc, char const *argv[]) {
-    
-    struct shmseg *pShm;
-
     if (argc == 1) {
         fprintf(stderr, "No files inputted. \n");
         exit(1);
