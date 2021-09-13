@@ -121,7 +121,8 @@ ssize_t writeShm(shmADT shared, const char * buf, size_t count) {
 
 int closeShm(shmADT shared, bool creator) {
     close(shared->shm_fd);
-    
+    munmap(shared->shm, sizeof(shmCDT));
+
     if (creator) {
         sem_unlink(shared->sem_name);
         shm_unlink(shared->shm_name);
