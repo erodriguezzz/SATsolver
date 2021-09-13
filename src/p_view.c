@@ -3,7 +3,6 @@
 
 /* Standard lib's */
 #include <stdio.h>
-#include <sys/shm.h>
 #include <fcntl.h>
 #include <ctype.h>
 

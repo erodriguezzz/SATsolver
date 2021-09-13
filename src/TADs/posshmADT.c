@@ -3,7 +3,7 @@
  * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  */
 
-#include "include/shmADT.h"
+#include "../include/shmADT.h"
 
 #include <sys/mman.h>
 #include <sys/types.h>

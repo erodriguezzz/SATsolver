@@ -1,4 +1,4 @@
-#include "include/slaveADT.h"
+#include "../include/slaveADT.h"
 #include <stdlib.h>
 #include <unistd.h>
 
