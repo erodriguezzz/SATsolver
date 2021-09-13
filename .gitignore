@@ -7,6 +7,14 @@
 .vscode
 tlpi-dist/*
 
+### Test files ###
+.config/*
+index.html
+strace_out
+report.tasks
+result.txt
+PVS-Studio.log
+
 ### Conjuctive Normal Form ("SAT files") and .txt result files ###
 *.cnf
 *.txt

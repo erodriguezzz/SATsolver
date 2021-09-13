@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #include "../include/slaveADT.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -27,7 +29,8 @@ slavesADT newSlaves(){
 int addSlave(slavesADT slaves, int pid, int fd_write){
     if(slaves == NULL)
         return 0;
-    slaves->slaves = realloc(slaves->slaves, (slaves->amount + 1) * sizeof(slave));
+    slave * aux = realloc(slaves->slaves, (slaves->amount + 1) * sizeof(slave));
+    slaves->slaves = aux;
     if(slaves->slaves == NULL)
         return 0;
     slaves->slaves[slaves->amount].pid = pid;

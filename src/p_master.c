@@ -1,3 +1,5 @@
+// This is a personal academic project. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 #define _DEFAULT_SOURCE
 
 #include <stdio.h>
@@ -83,6 +85,9 @@ int main(int argc, char const *argv[]){
 
     FILE * s2m_ptr = fdopen(s2m[P_R], "r");
     FILE * result = fopen("result.txt", "w+");
+    if (result == NULL) {
+        return -1;
+    }
     char *buf = NULL;
     size_t len;
 
@@ -97,6 +102,7 @@ int main(int argc, char const *argv[]){
             dprintf(fd, "%s\n", argv[sent + 1]);
             sent++;
         } else {
+            rmSlave(slaves, id);
             close(fd);
         }
     }
