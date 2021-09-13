@@ -8,5 +8,6 @@ NOTE: SAT solving problems are very complex. Given a formula in propositional lo
 ## Requirements
 
 - Minisat
+- tr
 
     sudo apt install -y minisat

@@ -1,0 +1,73 @@
+include ../Makefile.inc
+
+# TADS
+SLAVE_TAD_SOURCES := ADTs/slaveADT.c
+POSHM_TAD_SOURCES := ADTs/posshmADT.c
+SVSHM_TAD_SOURCES := ADTs/svshmADT.c
+
+SLAVE_TAD_OBJECTS := ADTs/slaveADT.o
+POSHM_TAD_OBJECTS := ADTs/posshmADT.o
+SVSHM_TAD_OBJECTS := ADTs/svshmADT.o
+
+# PROCESSES
+M_SOURCES := p_master.c
+S_SOURCES := p_slave.c
+V_SOURCES := p_view.c
+
+M_OBJECTS := p_master.o
+S_OBJECTS := p_slave.o
+V_OBJECTS := p_view.o
+
+M_TARGET := ../p_master
+S_TARGET := ../p_slave
+V_TARGET := ../p_view
+
+ALL_OBJECTS := $(M_OBJECTS) $(S_OBJECTS) $(V_OBJECTS) $(SLAVE_TAD_OBJECTS) $(POSHM_TAD_OBJECTS) $(SVSHM_TAD_OBJECTS)
+ALL_TARGETS := $(S_TARGET) $(V_TARGET) $(M_TARGET)
+
+# All POSIX
+all_posix: 
+	make posix
+	make $(M_TARGET) $(S_TARGET) $(V_TARGET)
+	@rm -rf $(ALL_OBJECTS)
+
+# Targets
+$(M_TARGET): $(M_OBJECTS)
+	$(GCC) $(GCCFLAGS) $< $(POSHM_TAD_OBJECTS) $(SLAVE_TAD_OBJECTS) -o $@ $(GCCLINKFLAGS)
+
+$(S_TARGET): $(S_OBJECTS)
+	$(GCC) $(GCCFLAGS) $< -o $@
+
+$(V_TARGET): $(V_OBJECTS)
+	$(GCC) $(GCCFLAGS) $< $(POSHM_TAD_OBJECTS) -o $@ $(GCCLINKFLAGS)
+
+# All System V
+all_sysv:
+	make sysv
+	$(GCC) $(GCCFLAGS) -c $(M_SOURCES) -o $(M_OBJECTS)
+	$(GCC) $(GCCFLAGS) -c $(S_SOURCES) -o $(S_OBJECTS)
+	$(GCC) $(GCCFLAGS) -c $(V_SOURCES) -o $(V_OBJECTS)
+	$(GCC) $(GCCFLAGS) $(M_OBJECTS) $(SVSHM_TAD_OBJECTS) $(SLAVE_TAD_OBJECTS) -o $(M_TARGET) $(GCCLINKFLAGS)
+	$(GCC) $(GCCFLAGS) $(S_OBJECTS) -o $(S_TARGET)
+	$(GCC) $(GCCFLAGS) $(V_OBJECTS) $(SVSHM_TAD_OBJECTS) -o $(V_TARGET) $(GCCLINKFLAGS)
+	@rm -rf $(ALL_OBJECTS)
+
+# POSIX
+posix: $(SLAVE_TAD_OBJECTS) $(POSHM_TAD_OBJECTS)
+
+$(POSHM_TAD_OBJECTS): $(POSHM_TAD_SOURCES)
+	$(GCC) $(GCCFLAGS) -c $< -o $@ $(GCCLINKFLAGS)
+
+# System V
+sysv: $(SLAVE_TAD_OBJECTS) $(SVSHM_TAD_OBJECTS)
+
+$(SVSHM_TAD_OBJECTS): $(SVSHM_TAD_SOURCES)
+	$(GCC) $(GCCFLAGS) -c $< -o $@ $(GCCLINKFLAGS)
+
+$(SLAVE_TAD_OBJECTS): $(SLAVE_TAD_SOURCES)
+	$(GCC) $(GCCFLAGS) -c $< -o $@ $(GCCLINKFLAGS)
+
+
+clean:
+	@rm -rf $(ALL_OBJECTS)
+	@rm -rf $(ALL_TARGETS)
