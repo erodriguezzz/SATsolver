@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
-#define MAX_LENGTH 1024 // TODO: This can be later modified to suit a circular buffer.
+#define MAX_LENGTH 65536 // TODO: This can be later modified to suit a circular buffer.
 #define MAX_NAME_LENGTH 20
 
 typedef struct shmCDT * shmADT;

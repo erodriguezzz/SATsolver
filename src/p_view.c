@@ -4,24 +4,13 @@
 /* Standard lib's */
 #include <stdio.h>
 #include <fcntl.h>
-#include <ctype.h>
 #include <stdlib.h>
 #include <unistd.h>
-#define MAX_NAME_LEN 20
-
-/**
- * Translates a number represented by a string to a integer
- * e.g.: "123" -> (int) 123
- *
- * @param[in] str The string containing the number.
- *
- * @return The represented Integer
- * */
-int strToNum(const char * str);
+#include <linux/limits.h>
 
 int main(int argc, char const *argv[]) {
     int files = 0;
-    char buffer[MAX_LENGTH];
+    char buffer[PIPE_BUF];
     shmADT shared;
     if (argc != 3) {
         char * shm_name = NULL;
@@ -46,13 +35,13 @@ int main(int argc, char const *argv[]) {
     if (shared == NULL)
         return -1;  // TODO: Better handle error exits.
     
-    int qty = readShm(shared, buffer, MAX_LENGTH);
+    int qty = readShm(shared, buffer, PIPE_BUF);
     if(qty == -1)
         return -1;
     files = atoi(buffer);
 
     while (files--) {
-        if (readShm(shared, buffer, MAX_LENGTH) == -1) {
+        if (readShm(shared, buffer, PIPE_BUF) == -1) {
             return -1;
         }
         printf("%s", buffer); // TODO: Analyze how we write to stdout.

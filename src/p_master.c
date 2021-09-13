@@ -4,13 +4,11 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 #include "include/slaveADT.h"
 #include "include/shmADT.h"
 
 #define P_R 0 // TODO: Change this to P_R & P_W to avoid confusion with the shm perms & mode.
 #define P_W 1
-#define SHM_KEY 1234
 #define FILES_PER_SLAVE 2
 #define FILE_BUF_LEN 10
 
