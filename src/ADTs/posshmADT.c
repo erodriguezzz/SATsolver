@@ -89,7 +89,7 @@ ssize_t readShm(shmADT shared, char * buf, size_t count) {
     }
 
 
-    if (shared->shm->w_pointer == 0) { // TODO: This should not happen with a correctly sized MAX_LENGTH.
+    if (shared->shm->w_pointer == 0) { // This should not happen with a correctly sized MAX_LENGTH.
         shared->shm->r_pointer = 0;
     } else if (shared->shm->buf[shared->shm->r_pointer] == '\0') {
         shared->shm->r_pointer++;
@@ -111,7 +111,7 @@ ssize_t writeShm(shmADT shared, const char * buf, size_t count) {
     if (shared->shm->w_pointer < MAX_LENGTH)
         shared->shm->buf[shared->shm->w_pointer++] = '\0';
 
-    if (shared->shm->w_pointer == MAX_LENGTH) {  /* TODO: This can be avoided with a set buffer length of 2^N
+    if (shared->shm->w_pointer == MAX_LENGTH) {  /* This can be avoided with a set buffer length of 2^N
                                                     and a circular buffer with 2^N sized w & r pointers. */
         shared->shm->w_pointer = 0;
         errno = ENOMEM;

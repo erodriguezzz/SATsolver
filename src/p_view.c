@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]) {
         if (readShm(shared, buffer, PIPE_BUF) == -1) {
             return -1;
         }
-        printf("%s", buffer); // TODO: Analyze how we write to stdout.
+        printf("%s", buffer);
     }
 
     closeShm(shared, false);
