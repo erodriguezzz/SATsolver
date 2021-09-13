@@ -68,10 +68,13 @@ int main(int argc, char const *argv[]){
         if(pid < 0)
             exit(1);
         if(pid == 0){
+            closeAllFD(slaves);
             close(m2s[P_W]); // TODO: Err exit.
             close(s2m[P_R]);
             dup2(m2s[P_R], STDIN_FILENO);// TODO: Err exit.
             dup2(s2m[P_W], STDOUT_FILENO);
+            close(m2s[P_R]);
+            close(s2m[P_W]);
             execl(PATH_TO_SLAVE, SLAVE, (char *) NULL);
             return 1;
         }
