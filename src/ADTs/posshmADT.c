@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
 /**
  * @file: posshmADT.c
- * @author: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
+ * @authors: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  */
 
 #include "../include/shmADT.h"
