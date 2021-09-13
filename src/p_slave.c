@@ -10,8 +10,6 @@
 #define MAX_PATH_LENGTH 256
 #define CLEAN_BUFF while(getchar() != '\n');
 
-int isValidPath(const char * path);
-
 int main() {
     char buff[PIPE_BUF] = {0}, output[PIPE_BUF], path[MAX_PATH_LENGTH];
     char fmt[MAX_PATH_LENGTH];
