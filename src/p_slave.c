@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <string.h>
 #include <limits.h>
-#include <fcntl.h>
 
 #define MAX_PATH_LENGTH 256
 #define CLEAN_BUFF while(getchar() != '\n');
@@ -21,22 +20,22 @@ int main() {
         sprintf(output, "%d\tFILENAME: ", getpid());
         CLEAN_BUFF
         strcat(output, path);
-        strcat(output, "\t");
+        strcat(output, ":\t");
         FILE * stream = NULL;
-        if (isValidPath(path)) {
+        if (access(path, R_OK) == 0) {
             if (snprintf(buff, PIPE_BUF,
                          "minisat %s | grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\" | tr '\\n' '\\t'", path) > 0) {
                 stream = popen(buff, "r");
             } else {
                 return -1;
             }
+            while (fgets(buff, PIPE_BUF, stream) != NULL) {
+                strcat(output, buff);
+            }
+            pclose(stream);
         } else {
-            return -1;
+            strcat(output, "ERROR: Cannot access file.");
         }
-        while (fgets(buff, PIPE_BUF, stream) != NULL) {
-            strcat(output, buff);
-        }
-        pclose(stream);
         printf("%s\n", output);
         fflush(stdout);
     }
@@ -44,12 +43,3 @@ int main() {
     return 0;
 }
 
-
-int isValidPath(const char * path) {
-    int fd = 0;
-    if ((fd = open(path, O_RDONLY, S_IRUSR)) == -1) {
-        return 0;
-    }
-    close(fd);
-    return 1;
-}
