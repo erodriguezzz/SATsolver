@@ -24,7 +24,7 @@ int main() {
         }
         pclose(stream);
         printf("%s\n", output);
-        fflush(NULL);
+        fflush(stdout);
     }
 
     return 0;
