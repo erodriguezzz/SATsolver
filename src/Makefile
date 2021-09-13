@@ -26,7 +26,8 @@ ALL_OBJECTS := $(M_OBJECTS) $(S_OBJECTS) $(V_OBJECTS) $(SLAVE_TAD_OBJECTS) $(POS
 ALL_TARGETS := $(S_TARGET) $(V_TARGET) $(M_TARGET)
 
 # All POSIX
-all_posix: $(posix)
+all_posix: 
+	make posix
 	make $(M_TARGET) $(S_TARGET) $(V_TARGET)
 	@rm -rf $(ALL_OBJECTS)
 
