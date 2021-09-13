@@ -1,6 +1,10 @@
 include ./Makefile.inc
 
-rebuild: clean all
+rebuild_posix:
+	make clean; make all_posix;
+
+rebuild_sysv:
+	make clean; make all_sysv;
 
 all_sysv:
 	cd src; make all_sysv;
