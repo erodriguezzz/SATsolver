@@ -4,6 +4,8 @@
 ### Bash history && VScode ### 
 .bash_history
 .bashrc
+.vscode
+tlpi-dist/*
 
 ### Conjuctive Normal Form ("SAT files") and .txt result files ###
 *.cnf
