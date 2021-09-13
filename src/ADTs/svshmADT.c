@@ -13,7 +13,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <semaphore.h>
-#include <sys/stat.h>
 #include <errno.h>
 #include <string.h>
 
@@ -42,19 +41,19 @@ shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode)
 
     strcpy(shm_adt->sem_name, sem_name);
 
-    shm_adt->shm_id = shmget(key, sizeof(t_shm), flags);
+    shm_adt->shm_id = shmget(key, sizeof(t_shm), flags & O_CREAT ? IPC_CREAT | mode : 0);
     if (shm_adt->shm_id == -1) {
         free(shm_adt);
         return NULL;
     }
-    
-    shm_adt->shm = shmat(shm_adt->shm_id, NULL, S_IWUSR & flags ? 0 : SHM_RDONLY);
+
+    shm_adt->shm = shmat(shm_adt->shm_id, NULL, O_RDWR & flags ? 0 : SHM_RDONLY);
     if (shm_adt->shm == (void * ) -1) {
         closeShm(shm_adt, flags & O_CREAT);
         return NULL;
     }
 
-    if (flags & IPC_CREAT) {
+    if (flags & O_CREAT) {
         shm_adt->sem = sem_open(sem_name, O_CREAT, mode , 0);
         if (shm_adt->sem == SEM_FAILED) {
             closeShm(shm_adt, flags & O_CREAT);

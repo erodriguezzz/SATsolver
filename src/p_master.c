@@ -28,7 +28,6 @@ int main(int argc, char const *argv[]){
     char sem_name[MAX_NAME_LENGTH] = SEM_NAME;
 
     shmADT shm = newShm(shm_name, sem_name, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-
     if (shm == NULL) {
         return -1;
     }
