@@ -59,7 +59,8 @@ int main(int argc, char const *argv[]){
     int m2s[2], s2m[2]; // Master to slave, slave to master.
     if(pipe(s2m) < 0)
         exit(1);
-    for(int i = 0; i < n; i++){
+    int i;
+    for(i = 0; i < n; i++){
         if(pipe(m2s) < 0)
             exit(1);
         int pid = fork();
@@ -102,8 +103,7 @@ int main(int argc, char const *argv[]){
         }
     }
 
-    sleep(10);
-
+    getc(stdin);
     free(buf);
     fclose(s2m_ptr);
     fclose(result);

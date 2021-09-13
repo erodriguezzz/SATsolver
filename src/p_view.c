@@ -28,9 +28,13 @@ int main(int argc, char const *argv[]) {
         char * sem_name = NULL;
         size_t len=0;
 
-        if (getline(&shm_name, &len, stdin) <= 0) return -1;
+        if ((len = getline(&shm_name, &len, stdin)) <= 0) return -1;
 
-        if (getline(&sem_name, &len, stdin) <= 0) return -1;
+        shm_name[len-1] = 0;
+
+        if ((len = getline(&sem_name, &len, stdin)) <= 0) return -1;
+
+        sem_name[len-1] = 0;
 
         shared = newShm(shm_name, sem_name, O_RDWR, 0);
         
@@ -45,10 +49,7 @@ int main(int argc, char const *argv[]) {
     int qty = readShm(shared, buffer, MAX_LENGTH);
     if(qty == -1)
         return -1;
-    printf("%d\n", qty);
-    printf("%s\n", buffer);
     files = atoi(buffer);
-    printf("%d\n", files);
 
     while (files--) {
         if (readShm(shared, buffer, MAX_LENGTH) == -1) {
@@ -58,6 +59,5 @@ int main(int argc, char const *argv[]) {
     }
 
     closeShm(shared, false);
-    printf("Hola\n");
     return 0;
 }
