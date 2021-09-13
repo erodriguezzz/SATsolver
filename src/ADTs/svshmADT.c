@@ -33,7 +33,7 @@ typedef struct shmCDT {
 } shmCDT;
 
 
-shmADT newShm(const char * shm_name, const char * sem_name, int perms, int mode) {
+shmADT newShm(const char * shm_name, const char * sem_name, int flags, int mode) {
     int key = (int) (*shm_name);
     shmADT shm_adt = malloc(sizeof(shmCDT));
     if (shm_adt == NULL) {
@@ -42,24 +42,28 @@ shmADT newShm(const char * shm_name, const char * sem_name, int perms, int mode)
 
     strcpy(shm_adt->sem_name, sem_name);
 
-    shm_adt->shm_id = shmget(key, sizeof(t_shm), perms);
+    shm_adt->shm_id = shmget(key, sizeof(t_shm), flags);
     if (shm_adt->shm_id == -1) {
+        free(shm_adt);
         return NULL;
     }
     
-    shm_adt->shm = shmat(shm_adt->shm_id, NULL, S_IWUSR & perms ? 0 : SHM_RDONLY);
+    shm_adt->shm = shmat(shm_adt->shm_id, NULL, S_IWUSR & flags ? 0 : SHM_RDONLY);
     if (shm_adt->shm == (void * ) -1) {
+        closeShm(shm_adt, flags & O_CREAT);
         return NULL;
     }
 
-    if (perms & IPC_CREAT) {
+    if (flags & IPC_CREAT) {
         shm_adt->sem = sem_open(sem_name, O_CREAT, mode , 0);
         if (shm_adt->sem == SEM_FAILED) {
+            closeShm(shm_adt, flags & O_CREAT);
             return NULL;
         }
     } else {
         shm_adt->sem = sem_open(sem_name, 0);
         if (shm_adt->sem == SEM_FAILED) {
+            closeShm(shm_adt, flags & O_CREAT);
             return NULL;
         }
     }
@@ -67,43 +71,47 @@ shmADT newShm(const char * shm_name, const char * sem_name, int perms, int mode)
     return shm_adt;
 }
 
-ssize_t readShm(shmADT share, char * buf, size_t count) {
-    if (sem_wait(share->sem) == -1) {
+ssize_t readShm(shmADT shared, char * buf, size_t count) {
+    if (sem_wait(shared->sem) == -1) {
         return -1;
     }
-    
+
     ssize_t i = 0;
-    while (share->shm->r_pointer < share->shm->w_pointer && i < count && share->shm->buf[share->shm->r_pointer] != '\0') {
-        buf[i++] = share->shm->buf[share->shm->r_pointer++];
+    while (shared->shm->r_pointer < shared->shm->w_pointer && i < count && shared->shm->buf[shared->shm->r_pointer] != '\0') {
+        buf[i++] = shared->shm->buf[shared->shm->r_pointer++];
     }
 
 
-    if (share->shm->w_pointer == 0) { // TODO: Check this.
-        share->shm->r_pointer = 0;
-    } else if (share->shm->buf[share->shm->r_pointer] == '\0') {
-        share->shm->r_pointer++;
+    if (shared->shm->w_pointer == 0) { // TODO: This should not happen with a correctly sized MAX_LENGTH.
+        shared->shm->r_pointer = 0;
+    } else if (shared->shm->buf[shared->shm->r_pointer] == '\0') {
+        shared->shm->r_pointer++;
+    }
+
+    if (i < count) {
+        buf[i] = '\0';
     }
 
     return i;
 }
 
-ssize_t writeShm(shmADT share, const char * buf, size_t count) {
+ssize_t writeShm(shmADT shared, const char * buf, size_t count) {
     ssize_t i = 0;
-    while (share->shm->w_pointer < MAX_LENGTH && i < count && buf[i] != '\0') {
-        share->shm->buf[share->shm->w_pointer++] = buf[i++];
+    while (shared->shm->w_pointer < MAX_LENGTH && i < count && buf[i] != '\0') {
+        shared->shm->buf[shared->shm->w_pointer++] = buf[i++];
     }
 
-    if (share->shm->w_pointer < MAX_LENGTH)
-        share->shm->buf[share->shm->w_pointer++] = '\0';
+    if (shared->shm->w_pointer < MAX_LENGTH)
+        shared->shm->buf[shared->shm->w_pointer++] = '\0';
 
-    if (share->shm->w_pointer == MAX_LENGTH) {  // TODO: This can be avoided with a set buffer length of 2^N 
-                                              // and a circular buffer with 2^N sized w & r pointers.
-        share->shm->w_pointer = 0;
+    if (shared->shm->w_pointer == MAX_LENGTH) {  /* TODO: This can be avoided with a set buffer length of 2^N
+                                                    and a circular buffer with 2^N sized w & r pointers. */
+        shared->shm->w_pointer = 0;
         errno = ENOMEM;
         return -1;
     }
 
-    if (sem_post(share->sem) == -1) {
+    if (sem_post(shared->sem) == -1) {
         return -1;
     }
 
@@ -111,18 +119,14 @@ ssize_t writeShm(shmADT share, const char * buf, size_t count) {
 }
 
 int closeShm(shmADT share, bool creator) {
-    if(shmdt(share->shm) == -1)
-        return -1;
-    
+    shmdt(share->shm);
+
     if (creator) {
-        if(sem_unlink(share->sem_name) == -1)
-            return -1;
-        if (shmctl(share->shm_id, IPC_RMID, 0) == -1)
-            return -1; 
+        sem_unlink(share->sem_name);
+        shmctl(share->shm_id, IPC_RMID, 0);
     }
 
-    if(sem_close(share->sem) == -1)
-        return -1;
+    sem_close(share->sem);
 
     free(share);
     return 0;
