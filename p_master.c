@@ -12,12 +12,11 @@
 #define SHM_KEY 1234
 #define FILES_PER_SLAVE 2
 
-int main(int argc, char const *argv[]) {
-    if (argc == 1) {
+int main(int argc, char const *argv[]){
+    if(argc == 1){
         fprintf(stderr, "No files inputted. \n");
         exit(1);
     }
-
 //    int n = (argc + (argc % 2)) / FILES_PER_SLAVE, files = 0;
     int n = 1, m2s[2], s2m[2];
     slavesADT slaves = newSlaves();

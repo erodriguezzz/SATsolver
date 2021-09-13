@@ -8,7 +8,6 @@
 ### Conjuctive Normal Form ("SAT files") ### 
 *.cnf
 
-
 ### C ###
 # Prerequisites
 *.d
