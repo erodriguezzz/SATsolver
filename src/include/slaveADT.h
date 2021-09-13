@@ -53,11 +53,18 @@ int rmSlave(slavesADT slaves, int slave_id);
 int getWriteFD(slavesADT slaves, int slave_id);
 
 /**
+ * Closes all file descriptors from all slaves.
+ * @param[in] slaves Slave collection.
+ * @return Returns the amount of file descriptors closed.
+ */
+int closeAllFD(slavesADT slaves);
+
+/**
  * Frees al allocated resources.
  *
  * @param[in] slaves Collection to be freed.
  */
-void freeSlaves(slavesADT slaves);
+void freeSlaves(slavesADT slaves); // \( ﾟヮﾟ)/
 
 
 #endif

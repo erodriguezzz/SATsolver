@@ -63,6 +63,19 @@ int getWriteFD(slavesADT slaves, int slave_id){
     return -1;
 }
 
+int closeAllFD(slavesADT slaves){
+    if(slaves == 0)
+        return -1;
+    int count = 0;
+    for(int i = 0; i < slaves->amount; i++){
+        if(slaves->slaves[i].occupied) {
+            close(slaves->slaves[i].fd_write);
+            count++;
+        }
+    }
+    return count;
+}
+
 
 void freeSlaves(slavesADT slaves){
     free(slaves->slaves);
