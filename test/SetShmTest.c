@@ -1,58 +1,69 @@
 // source: https://github.com/alejoaquili/c-unit-testing-example
 #include <stdio.h>
 #include "SetShmTest.h"
+#include "include/shmADT.h"
+#include <errno.h>
+#define SEM_NAME "nametest"
 
 static const size_t TestQuantity = 3;
-static const Test ShareMemoryTests[] = {testShareMemoryCreation, testShareMemoryAttachment, testShareMemoryDetachment};
+static const Test ShareMemoryTests[] = {testShareMemoryCreation, testCloseShareMemory};
 
-static int ShmKey, ShmId;
+static char * ShmName;
+static shmADT toBeTestedProducer;
+static shmADT toBeTesedConsumer;
 
 void testShareMemoryCreation(CuTest *const cuTest);
-//void testShareMemoryAttachment(CuTest *const cuTest);
-//void testShareMemoryDetachment(CuTest *const cuTest);
+//void testCloseShareMemory(CuTest *const cuTest);
 
-void givenACertainShmKey(void);
+void givenACertainShmName(void);
 
 void whenShareMemoryIsCreated(CuTest *const cuTest);
+void whenClosingShareMemory(CuTest *const cuTest);
 
-void thenAValidIdentifierIsReturned();
+void thenAValidFdIsReturned();
 
 static void givenAnAvailableMemorySpace(CuTest *const cuTest);
 
 void testShareMemoryCreation(CuTest *const cuTest){
-    givenACertainShmKey();
+    givenACertainShmName();
     whenShareMemoryIsCreated(cuTest);
-    thenAValidIdentifierIsReturned();
-}
-/* 
-void testShareMemoryAttachment(CuTest *const cuTest){
-    
+    thenAValidFdIsReturned();
 }
 
-void testShareMemoryDetachment(CuTest *const cuTest){
-    
-} */
+/* 
+void testCloseShareMemory(CuTest *const cuTest){
+    whenClosingShareMemory(cuTest);
+}
+*/
 
 CuSuite *getShareMemoryTestSuite(void) {
 	CuSuite *const suite = CuSuiteNew();
 
 	for (size_t i = 0; i < TestQuantity; i++)
-		SUITE_ADD_TEST(suite, MemoryManagerTests[i]);
+		SUITE_ADD_TEST(suite, ShareMemoryTests[i]);
 
 	return suite;
 }
 
-void givenACertainShmKey(){
-    ShmKey = 1234;
+void givenACertainShmName(){
+    ShmName = "MyShm";
 }
 
 void whenShareMemoryIsCreated(CuTest *const cuTest){
-    ShmId = shmget(ShmKey, sizeof(struct shmseg/*tbd*/), /*tbd*/IPC_CREAT | OBJ_PERMS);
-    if (ShmId == -1)
-        CuFail(cuTest, "[whenShareMemoryIsCreated]: No more space for the allocation of Share Memory.");
+    toBeTestedProducer = newShm(ShmName, SEM_NAME, O_RDWR, 0666)
+    cuAssertTrue(cuTest, "[whenShareMemoryIsCreated]: Couldn't create a Shm without flag O_CREAT.", toBeTestedProducer == NULL);
+    toBeTestedProducer = newShm(ShmName, SEM_NAME, O_CREAT | O_RDONLY, 0666)
+    cuAssert(cuTest, "[whenShareMemoryIsCreated]: wrong arguments for ftruncate.", toBeTestedProducer == NULL);
+    toBeTestedProducer = newShm(ShmName, SEM_NAME, O_CREAT | O_RDWR, 0666)
+    cuAsset(cuTest, "[whenShareMemoryIsCreated]: Not enough space to creat Share Memory.", errno == ENOMEM);
+    toBeTestedConsumer = newShm(ShmName, SEM_NAME, O_RDWR, 0666);
+}
+
+void thenAValidFdIsReturned(){
+    
 }
 
 // Not really necessary; style decision.
-void thenAValidIdentifierIsReturned(CuTest *const cuTest){
-    cuAssert(cuTest, "[thenAValidIdentifierIsReturned]: Not a valid ID for Share Memory.", ShmID < 0);
+void thenAValidFdIsReturned(CuTest *const cuTest){
+    
 }
