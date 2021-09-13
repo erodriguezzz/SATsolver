@@ -63,7 +63,7 @@ ssize_t writeShm(shmADT shm, const char * buf, size_t count);
  * it destroys it.
  *
  * @param[in] share The share memory reference ADT.
- * @param[in] creator If the user runing the comand created the share mem.
+ * @param[in] creator If the user running the command created the share mem.
  *
  * @return 0 if all goes well or -1 in case of an error.
  * */
