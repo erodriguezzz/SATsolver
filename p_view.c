@@ -1,48 +1,54 @@
-#include <stdio.h>
+/* Local Includes */
 #include "include/shmADT.h"
-#include <sys/types.h>
-#include <sys/ipc.h>
+
+/* Standard lib's */
+#include <stdio.h>
 #include <sys/shm.h>
-#include <stdlib.h>
 #include <fcntl.h>
-#include <semaphore.h>
-#include <sys/stat.h>
-#include <errno.h>
+#include <ctype.h>
 
-int strtonum(const char * str){
-    int i = 0, result;
-    while(str[i]){
-        result = result * 10 + str[i];
-    }
-    return result;
-}
+/**
+ * Translates a number represented by a string to a integer
+ * e.g.: "123" -> (int) 123
+ *
+ * @param[in] str The string containing the number.
+ *
+ * @return The represented Integer
+ * */
+int strToNum(const char * str);
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]) {
     int files = 0;
     char buffer[MAX_LENGTH];
     shmADT shared  = newShm("somos unos kpo", "somos unos msckpo", O_RDWR, 0);
-    if(shared == NULL)
-        return -1;
+    if (shared == NULL)
+        return -1;  // TODO: Better handle error exits.
     
-    if(argc == 2){
-        files = strtonum(argv[1]);
-    } else if(argc == 1){
+    if (argc == 2) {  // TODO: Discuss how we can handle (int) files
+        files = strToNum(argv[1]);
+    } else if (argc == 1) {
         int qty = readShm(shared, buffer, MAX_LENGTH);
         if(qty == 0)
             return -1;
-        files = strtonum(buffer);
+        files = strToNum(buffer);
     } else {
         return -1;
     }  
         
-    while(files--){
-        if(readShm(shared, buffer, MAX_LENGTH) == -1){
-            printf("Error leyendo buffer: %s\n", buffer);
+    while (files--) {
+        if (readShm(shared, buffer, MAX_LENGTH) == -1) {
             return -1;
         }
-        printf("%s\n", buffer);
+        puts(buffer); // TODO: Analyze how we write to stdout.
     }
 
     closeShm(shared, false);
+    return 0;
+}
+
+int strToNum(const char * str) {
+    int result;
+    while (*str && isdigit(*str))
+        result = result * 10 + *(str++) - '0';
+    return result;
 }
