@@ -1,18 +1,17 @@
 #include "include/slaveADT.h"
 #include <stdlib.h>
-#include <sys/select.h>
+#include <unistd.h>
 
 
 typedef struct slave{
     char occupied;
-    int fd_read;
     int fd_write;
+    int pid;
 }slave;
 
 typedef struct slavesCDT{
     slave *slaves;
-    size_t amount, largest;
-    fd_set *active_set;
+    size_t amount;
 } slavesCDT;
 
 slavesADT newSlaves(){
@@ -21,75 +20,48 @@ slavesADT newSlaves(){
         return NULL;
     new->slaves = NULL;
     new->amount = 0;
-    new->largest = 0;
-    new->active_set = malloc(sizeof(fd_set));
-    if(new->active_set == NULL)
-        return NULL;
-    FD_ZERO(new->active_set);
     return new;
 
 }
 
-int addSlave(slavesADT slaves, int slave_id, int fd_read, int fd_write){
+int addSlave(slavesADT slaves, int pid, int fd_write){
     if(slaves == NULL)
         return 0;
-    if(slave_id + 1 >= slaves->amount){
-        slaves->slaves = realloc(slaves->slaves, (slave_id + 1) * sizeof(slave));
-        if(slaves->slaves == NULL)
-            return 0;
-        for(size_t i = slaves->amount; i <= slave_id; i++)
-            slaves->slaves[i].occupied = 0;
-        slaves->amount = slave_id + 1;
-    }
-    slaves->slaves[slave_id].fd_read = fd_read;
-    slaves->slaves[slave_id].fd_write = fd_write;
-    slaves->slaves[slave_id].occupied = 1;
-    FD_SET(fd_read, slaves->active_set);
-    if(fd_read >= slaves->largest)
-        slaves->largest = fd_read;
+    slaves->slaves = realloc(slaves->slaves, (slaves->amount + 1) * sizeof(slave));
+    if(slaves->slaves == NULL)
+        return 0;
+    slaves->slaves[slaves->amount].pid = pid;
+    slaves->slaves[slaves->amount].occupied = 1;
+    slaves->slaves[slaves->amount++].fd_write = fd_write;
+
     return 1;
 }
 
 int rmSlave(slavesADT slaves, int slave_id){
     if(slaves == NULL)
         return 0;
-    if(slave_id >= slaves->amount)
-        return 0;
-    FD_CLR(slaves->slaves[slave_id].fd_read, slaves->active_set);
-    slaves->slaves[slave_id].occupied = 0;
-    return 1;
-}
-
-size_t available(slavesADT slaves, int *ready_ids){
-    if(slaves == NULL)
-        return -1;
-    fd_set read_set = *slaves->active_set;
-    if(select((int) slaves->largest + 1, &read_set, NULL, NULL, NULL) < 0){
-        return -1;
-    }
-    int added = 0;
     for(int i = 0; i < slaves->amount; i++){
-        if(slaves->slaves[i].occupied && FD_ISSET(slaves->slaves[i].fd_read, &read_set)){
-            ready_ids[added++] = i;
+        if(slaves->slaves[i].pid == slave_id){
+            slaves->slaves[i].occupied = 0;
+            return 1;
         }
     }
-    return added;
+    return 0;
 }
 
 int getWriteFD(slavesADT slaves, int slave_id){
-    if(slaves == NULL || slave_id >= slaves->amount || !slaves->slaves[slave_id].occupied)
+    if(slaves == NULL)
         return -1;
-    return slaves->slaves[slave_id].fd_write;
+    for(int i = 0; i < slaves->amount; i++){
+        if(slaves->slaves[i].occupied && slaves->slaves[i].pid == slave_id){
+            return slaves->slaves[i].fd_write;
+        }
+    }
+    return -1;
 }
 
-int getReadFD(slavesADT slaves, int slave_id){
-    if(slaves == NULL || slave_id >= slaves->amount || !slaves->slaves[slave_id].occupied)
-        return -1;
-    return slaves->slaves[slave_id].fd_read;
-}
 
 void freeSlaves(slavesADT slaves){
     free(slaves->slaves);
-    free(slaves->active_set);
     free(slaves);
 }
