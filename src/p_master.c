@@ -66,7 +66,8 @@ int main(int argc, char const *argv[]){
     int m2s[2], s2m[2]; // Master to slave, slave to master.
     if(pipe(s2m) < 0)
         errorMessage(FAILURE, "Error in function pipe()");
-    for (int i = 0; i < n; i++) {
+    int i;
+    for (i = 0; i < n; i++) {
         if(pipe(m2s) < 0)
             errorMessage(FAILURE, "Error in function pipe()");
         int pid = fork();
