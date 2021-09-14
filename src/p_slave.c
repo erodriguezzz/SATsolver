@@ -28,7 +28,8 @@ int main() {
                          "minisat %s | grep -o -e \"Number of .*[0-9]\\+\" -e \"CPU time.*\" -e \".*SATISFIABLE\" | tr '\\n' '\\t'", path) > 0) {
                 stream = popen(buff, "r");
             } else {
-                return -1;
+                perror("Failure in function access()");
+                exit(1);
             }
             while (fgets(buff, PIPE_BUF, stream) != NULL) {
                 strcat(output, buff);

@@ -76,3 +76,5 @@ The user can run the implemented static tests by using the following commands:
 ```make pvs-studio-test-sysv```
 
 ```make cpp-check-test```
+
+Note that pvs-studio and cpp-check do need to be installed. 
