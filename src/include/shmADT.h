@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
-#define MAX_LENGTH 65536
+#define MAX_LENGTH 65536 // Shared memory buffer length
 #define MAX_NAME_LENGTH 20
 
 typedef struct shmCDT * shmADT;

@@ -1,9 +1,14 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
+/**
+ * @file: posshmADT.c
+ * @authors: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
+ */
+
 /* Local Includes */
 #include "include/shmADT.h"
 
-/* Standard lib's */
+/* Standard & Sys lib's */
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>

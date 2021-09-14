@@ -1,6 +1,9 @@
 // This is a personal academic project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++ and C#: http://www.viva64.com
-#define _DEFAULT_SOURCE 
+/**
+ * @file: posshmADT.c
+ * @authors: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
+ */
 
 #include <stdio.h>
 #include <unistd.h>

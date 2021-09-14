@@ -12,6 +12,7 @@
 #define SLAVE_ADT_H
 
 #include <unistd.h>
+
 typedef struct slavesCDT * slavesADT;
 
 /**
@@ -67,4 +68,4 @@ int closeAllFD(slavesADT slaves);
 void freeSlaves(slavesADT slaves); // \( ﾟヮﾟ)/
 
 
-#endif
+#endif // SLAVE_ADT_H

@@ -5,13 +5,17 @@
  * @authors: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  * */
 
+/* Local includes */
+#include "include/slaveADT.h"
+#include "include/shmADT.h"
+
+/* Standard & Sys lib's */
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
-#include "include/slaveADT.h"
-#include "include/shmADT.h"
 
+/* Constants */
 #define P_R 0
 #define P_W 1
 #define FILES_PER_SLAVE 2
@@ -25,7 +29,6 @@
 
 #define SLEEP_TIME 3
 
-// TODO: add more meaningful error handling.
 int main(int argc, char const *argv[]){
     if(argc == 1){
         fprintf(stderr, "No files inputted. \n");

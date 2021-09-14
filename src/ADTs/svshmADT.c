@@ -5,8 +5,10 @@
  * @authors: Ezequiel Rodriguez, Juan I. Garcia M. & Jerónimo Brave.
  */
 
+/* Local Includes */
 #include "../include/shmADT.h"
 
+/* Standard & Sys lib's */
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
