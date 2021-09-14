@@ -24,11 +24,17 @@ int main(int argc, char const *argv[]) {
         char * sem_name = NULL;
         size_t len=0;
 
-        if ((len = getline(&shm_name, &len, stdin)) <= 0) return -1;
+        if ((len = getline(&shm_name, &len, stdin)) <= 0) {
+            perror("Failure in function getline()");
+            exit(1);
+        }
 
         shm_name[len-1] = 0;
 
-        if ((len = getline(&sem_name, &len, stdin)) <= 0) return -1;
+        if ((len = getline(&sem_name, &len, stdin)) <= 0) {
+            perror("Failure in function getline()");
+            exit(1);
+        }
 
         sem_name[len-1] = 0;
 
@@ -39,17 +45,22 @@ int main(int argc, char const *argv[]) {
         shared = newShm(argv[1], argv[2], O_RDWR, 0);
     }
 
-    if (shared == NULL)
-        return -1;  // TODO: Better handle error exits.
-    
-    int qty = readShm(shared, buffer, PIPE_BUF);
-    if(qty == -1)
-        return -1;
+    if (shared == NULL) {
+        perror("Error in function newShm()");
+        exit(1);
+    }
+
+    ssize_t qty = readShm(shared, buffer, PIPE_BUF);
+    if(qty == -1) {
+        perror("Failure in function readShm()");
+        exit(1);
+    }
     files = atoi(buffer);
 
     while (files--) {
         if (readShm(shared, buffer, PIPE_BUF) == -1) {
-            return -1;
+            perror("Failure in function readShm()");
+            exit(1);
         }
         printf("%s", buffer);
     }
