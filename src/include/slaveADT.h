@@ -36,7 +36,7 @@ slavesADT newSlaves();
 int addSlave(slavesADT slaves, int pid, int fd_write);
 
 /**
- * Removes a slave from the collection.
+ * Removes a slave from the collection and closes its file descriptor.
  *
  * @param[in] slave_id Slave pid.
  * @return Returns 1 if the slave was successfully added, 0 otherwise.
