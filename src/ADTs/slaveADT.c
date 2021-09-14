@@ -45,6 +45,7 @@ int rmSlave(slavesADT slaves, int slave_id){
         return 0;
     for(int i = 0; i < slaves->amount; i++){
         if(slaves->slaves[i].pid == slave_id){
+            close(slaves->slaves[i].fd_write);
             slaves->slaves[i].occupied = 0;
             return 1;
         }
