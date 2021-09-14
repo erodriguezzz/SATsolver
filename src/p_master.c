@@ -23,6 +23,8 @@
 #define PATH_TO_SLAVE "./p_slave"
 #define SLAVE "p_slave"
 
+#define SLEEP_TIME 3
+
 // TODO: add more meaningful error handling.
 int main(int argc, char const *argv[]){
     if(argc == 1){
@@ -40,6 +42,7 @@ int main(int argc, char const *argv[]){
     puts(shm_name);
     puts(sem_name);
     fflush(stdout);
+    sleep(SLEEP_TIME);
 
     char n_files[FILE_BUF_LEN] = {0};
     int read = sprintf(n_files, "%d", argc - 1);
