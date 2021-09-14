@@ -34,7 +34,7 @@ where ```<files>``` is the directory where your CNF files are located.
 
 And the other way to execute the system is using two terminals. Firstly, one of them should execute the master process using the following command:
 
-```$ ./p_master <files>```
+```$ ./p_view <files>```
 
 while in the other terminal, the user executes the view process by typing in the shell the command:
 
