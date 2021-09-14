@@ -27,8 +27,8 @@ typedef struct shmCDT * shmADT;
  *
  * @param[in] shm_name The share memory name at least 8 bytes long.
  * @param[in] sem_name The semaphore name at least 8 bytes long.
- * @param[in] flags The API flags for creation and permissions
- * @param[in] mode The permissions.
+ * @param[in] flags The API flags for creation (O_CREAT) and permissions (O_RDWR or O_RDONLY)
+ * @param[in] mode The permissions as declared in <fcntl.h>.
  *
  * @return The share memory reference ADT or NULL in case of an error.
  */
