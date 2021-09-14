@@ -13,11 +13,11 @@
 
 #include <unistd.h>
 
-typedef struct slavesCDT * slavesADT;
+typedef struct slavesCDT *slavesADT;
 
 /**
  * Creates the collection in which the slave information will be stored.
- * 
+ *
  * @return Returns NULL if it was not able to allocate memory. Else a
  * pointer to said structure is returned.
  */
@@ -25,12 +25,12 @@ slavesADT newSlaves();
 
 /**
  * Adds a slave to the collection.
- * 
+ *
  * @param[in] slaves The collection to which the slave will be added.
  * @param[in] pid  Slave pid.
  * @param[in] fd_write File descriptor to the corresponding writing
  * end of the slave.
- * 
+ *
  * @return Returns 1 if the slave was successfully added, 0 otherwise.
  */
 int addSlave(slavesADT slaves, int pid, int fd_write);
@@ -66,6 +66,5 @@ int closeAllFD(slavesADT slaves);
  * @param[in] slaves Collection to be freed.
  */
 void freeSlaves(slavesADT slaves); // \( ﾟヮﾟ)/
-
 
 #endif // SLAVE_ADT_H
