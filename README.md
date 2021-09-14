@@ -48,7 +48,6 @@ After doing all these steps, these are the possible outputs that resemble to tho
 $ ./p_master files/*
 0x12345678
 0x54321012
-1
 ```
 ```
 ./p_view 0x12345678 0x54321012
