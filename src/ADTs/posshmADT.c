@@ -28,7 +28,7 @@ typedef struct t_shm {
 
 typedef struct shmCDT {
   Pt_shm shm;
-  sem_t *sem;
+  sem_t *sem, *writer_in;
   int shm_fd;
   char shm_name[MAX_NAME_LENGTH];
   char sem_name[MAX_NAME_LENGTH];
@@ -70,9 +70,19 @@ shmADT newShm(const char *shm_name, const char *sem_name, int flags, int mode) {
       closeShm(shm_adt, true);
       return NULL;
     }
+    shm_adt->writer_in = sem_open(WRITE_SEM_NAME, O_CREAT, mode, 1);
+    if (shm_adt->writer_in == SEM_FAILED) {
+      closeShm(shm_adt, true);
+      return NULL;
+    }
   } else {
     shm_adt->sem = sem_open(shm_adt->sem_name, 0);
     if (shm_adt->sem == SEM_FAILED) {
+      closeShm(shm_adt, false);
+      return NULL;
+    }
+    shm_adt->writer_in = sem_open(shm_adt->sem_name, 0);
+    if (shm_adt->writer_in == SEM_FAILED) {
       closeShm(shm_adt, false);
       return NULL;
     }
@@ -140,7 +150,8 @@ int closeShm(shmADT shared, bool creator) {
   }
 
   sem_close(shared->sem);
-
+  sem_close(shared->writer_in);
+  
   free(shared);
   return 0;
 }

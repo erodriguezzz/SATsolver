@@ -19,6 +19,7 @@
 
 #define MAX_LENGTH 65536 // Shared memory buffer length
 #define MAX_NAME_LENGTH 20
+#define WRITE_SEM_NAME "noseevaluacalidaddecodigoenlasdefensas"
 
 typedef struct shmCDT *shmADT;
 
